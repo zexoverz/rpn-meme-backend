@@ -3,15 +3,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
 
-const createUser = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
 
-  res.status(httpStatus.CREATED).send({
-    status: httpStatus.CREATED,
-    message: "Create User Success",
-    data: user
-  });
-});
 
 const getUsers = catchAsync(async (req, res) => {
   const result = await userService.queryUsers();
@@ -37,7 +29,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body);
+  const user = await userService.updateUserById(req.user.userId, req.body);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -47,7 +39,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  await userService.deleteUserById(req.params.userId);
+  await userService.deleteUserById(req.user.userId);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -57,7 +49,6 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  createUser,
   getUsers,
   getUser,
   updateUser,
