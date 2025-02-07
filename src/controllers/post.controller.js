@@ -1,4 +1,4 @@
-const httpStatus = require('http-status');
+const {status} = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { postService } = require('../services');
@@ -9,8 +9,8 @@ const createPost = catchAsync(async (req, res) => {
     userId: req.user.userId
   });
 
-  res.status(httpStatus.CREATED).send({
-    status: httpStatus.CREATED,
+  res.status(status.CREATED).send({
+    status: status.CREATED,
     message: "Create Post Success",
     data: post
   });
@@ -20,8 +20,8 @@ const getPosts = catchAsync(async (req, res) => {
   const { pageParam, limit } = req.query;
   const posts = await postService.getInfinitePosts({ pageParam, limit });
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Get Posts Success",
     data: posts
   });
@@ -35,11 +35,11 @@ const updatePost = catchAsync(async (req, res) => {
   });
 
   if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(status.NOT_FOUND, 'Post not found');
   }
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Update Post Success",
     data: post
   });
@@ -50,17 +50,17 @@ const deletePost = catchAsync(async (req, res) => {
   const post = await postService.getPostById(postId);
 
   if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(status.NOT_FOUND, 'Post not found');
   }
 
   if (post.creatorId !== req.user.userId) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Not authorized to delete this post');
+    throw new ApiError(status.FORBIDDEN, 'Not authorized to delete this post');
   }
 
   await postService.deletePost(postId, post.imageId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Delete Post Success",
     data: null
   });
@@ -69,8 +69,8 @@ const deletePost = catchAsync(async (req, res) => {
 const likePost = catchAsync(async (req, res) => {
   const like = await postService.likePost(req.user.userId, req.params.postId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Like Post Success",
     data: like
   });
@@ -79,8 +79,8 @@ const likePost = catchAsync(async (req, res) => {
 const unlikePost = catchAsync(async (req, res) => {
   const unlike = await postService.unlikePost(req.user.userId, req.params.postId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Unlike Post Success",
     data: unlike
   });
@@ -89,8 +89,8 @@ const unlikePost = catchAsync(async (req, res) => {
 const savePost = catchAsync(async (req, res) => {
   const save = await postService.savePost(req.user.userId, req.params.postId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Save Post Success",
     data: save
   });
@@ -99,8 +99,8 @@ const savePost = catchAsync(async (req, res) => {
 const unsavePost = catchAsync(async (req, res) => {
   const unsave = await postService.unsavePost(req.user.userId, req.params.postId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(status.OK).send({
+    status: status.OK,
     message: "Unsave Post Success",
     data: unsave
   });
