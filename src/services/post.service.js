@@ -1,6 +1,6 @@
 const prisma = require("../../prisma");
 
- const createPost = async (post) => {
+ const createPost = async (post, userId) => {
     try {
   
       const newPost = await prisma.post.create({
@@ -25,12 +25,12 @@ const prisma = require("../../prisma");
     }
   };
   
- const getInfinitePosts = async ({ pageParam, limit = 9 }) => {
+ const getInfinitePosts = async ({ page, limit = 9 }) => {
     try {
       const posts = await prisma.post.findMany({
         take: limit,
-        skip: pageParam ? 1 : 0,
-        cursor: pageParam ? { id: pageParam } : undefined,
+        skip: page ? 1 : 0,
+        cursor: page ? { id: page } : undefined,
         orderBy: {
           createdAt: 'desc'
         },

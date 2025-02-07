@@ -17,8 +17,8 @@ const createPost = catchAsync(async (req, res) => {
 });
 
 const getPosts = catchAsync(async (req, res) => {
-  const { pageParam, limit } = req.query;
-  const posts = await postService.getInfinitePosts({ pageParam, limit });
+  const { page, limit } = req.query;
+  const posts = await postService.getInfinitePosts({ page, limit });
 
   res.status(status.OK).send({
     status: status.OK,
