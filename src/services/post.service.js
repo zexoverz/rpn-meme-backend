@@ -1,3 +1,5 @@
+const prisma = require("../../prisma");
+
  const createPost = async (post) => {
     try {
       const uploadedFile = await uploadFile(post.file[0]);
