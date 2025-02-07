@@ -7,8 +7,6 @@ const { Prisma } = require('@prisma/client')
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
-
-    console.log(error, "ERRORR API")
     // if error from axios or http request
     if(error.response){
       const message = err.response.data.message || err.response.data

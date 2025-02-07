@@ -6,7 +6,7 @@ const { postService } = require('../services');
 const createPost = catchAsync(async (req, res) => {
   const post = await postService.createPost({
     ...req.body,
-    userId: req.user.userId
+    userId: req.user.id
   });
 
   res.status(status.CREATED).send({

@@ -1,6 +1,6 @@
 const prisma = require("../../prisma");
 
- const createPost = async (post, userId) => {
+ const createPost = async (post) => {
     try {
   
       const newPost = await prisma.post.create({
@@ -9,7 +9,7 @@ const prisma = require("../../prisma");
           imageUrl: post.imageUrl,
           imageId: post.imageId,
           location: post.location,
-          tags: post.tags?.replace(/ /g, "").split(",") || [],
+          tags: post.tags,
           creatorId: post.userId
         },
         include: {
