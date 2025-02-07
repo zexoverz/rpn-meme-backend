@@ -2,14 +2,12 @@ const prisma = require("../../prisma");
 
  const createPost = async (post) => {
     try {
-      const uploadedFile = await uploadFile(post.file[0]);
-      if (!uploadedFile) throw new Error('File upload failed');
   
       const newPost = await prisma.post.create({
         data: {
           caption: post.caption,
-          imageUrl: uploadedFile.url,
-          imageId: uploadedFile.id,
+          imageUrl: post.imageUrl,
+          imageId: post.imageId,
           location: post.location,
           tags: post.tags?.replace(/ /g, "").split(",") || [],
           creatorId: post.userId
@@ -120,30 +118,12 @@ const prisma = require("../../prisma");
   
  const updatePost = async (post) => {
     try {
-      let imageData = {
-        imageUrl: post.imageUrl,
-        imageId: post.imageId
-      };
-  
-      if (post.file.length > 0) {
-        const uploadedFile = await uploadFile(post.file[0]);
-        if (!uploadedFile) throw new Error('File upload failed');
-        
-        imageData = {
-          imageUrl: uploadedFile.url,
-          imageId: uploadedFile.id
-        };
-  
-        // Delete old image
-        await deleteFile(post.imageId);
-      }
-  
       const updatedPost = await prisma.post.update({
         where: { id: post.postId },
         data: {
           caption: post.caption,
-          imageUrl: imageData.imageUrl,
-          imageId: imageData.imageId,
+          imageUrl: post.imageUrl,
+          imageId: post.imageId,
           location: post.location,
           tags: post.tags?.replace(/ /g, "").split(",") || []
         }
