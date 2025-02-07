@@ -27,10 +27,13 @@ const prisma = require("../../prisma");
   
  const getInfinitePosts = async ({ page, limit = 9 }) => {
     try {
+
+      const cursor = page && typeof page === 'string' ? { id: page } : undefined;
+
       const posts = await prisma.post.findMany({
         take: limit,
-        skip: page ? 1 : 0,
-        cursor: page ? { id: page } : undefined,
+        skip: cursor ? 1 : 0,
+        cursor: cursor,
         orderBy: {
           createdAt: 'desc'
         },
