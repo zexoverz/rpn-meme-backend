@@ -50,6 +50,42 @@ const prisma = require("../../prisma");
       throw error;
     }
   };
+
+
+  const getSavedPosts = async ({ userId, page, limit = 9 }) => {
+    try {
+      const cursor = page && typeof page === 'string' ? { id: page } : undefined;
+  
+      const savedPosts = await prisma.save.findMany({
+        where: {
+          userId: userId
+        },
+        take: limit,
+        skip: cursor ? 1 : 0,
+        cursor: cursor,
+        orderBy: {
+          createdAt: 'desc'
+        },
+        include: {
+          post: {
+            include: {
+              creator: true,
+              likes: true,
+              saves: true
+            }
+          }
+        }
+      });
+  
+      // Transform the data to match the posts structure
+      const posts = savedPosts.map(save => save.post);
+  
+      return posts;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
   
   const likePost = async (userId, postId) => {
     try {
@@ -147,5 +183,6 @@ module.exports = {
     unlikePost,
     savePost,
     unsavePost,
-    updatePost
+    updatePost,
+    getSavedPosts
 }
