@@ -21,8 +21,11 @@ router
   .delete(auth(), validate(postValidation.unlikePost), postController.unlikePost);
 
 router
-  .route('/:postId/save')
+  .route('/save')
   .get(auth(), validate(postValidation.getSavedPost), postController.getSavedPost)
+
+router
+  .route('/:postId/save')
   .post(auth(), validate(postValidation.savePost), postController.savePost)
   .delete(auth(), validate(postValidation.unsavePost), postController.unsavePost);
 
