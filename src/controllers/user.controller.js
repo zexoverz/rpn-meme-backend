@@ -6,7 +6,8 @@ const { userService } = require('../services');
 
 
 const getUsers = catchAsync(async (req, res) => {
-  const result = await userService.queryUsers();
+  const { page, limit } = req.query;
+  const result = await userService.queryUsers({page, limit});
   
   res.status(status.OK).send({
     status: status.OK,
