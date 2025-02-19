@@ -51,7 +51,7 @@ const prisma = require("../../prisma");
     }
   };
   
- const likePost = async (userId, postId) => {
+  const likePost = async (userId, postId) => {
     try {
       const like = await prisma.like.create({
         data: {

@@ -31,7 +31,7 @@ const updatePost = catchAsync(async (req, res) => {
   const post = await postService.updatePost({
     ...req.body,
     postId: req.params.postId,
-    userId: req.user.userId
+    userId: req.user.id
   });
 
   if (!post) {
@@ -53,7 +53,7 @@ const deletePost = catchAsync(async (req, res) => {
     throw new ApiError(status.NOT_FOUND, 'Post not found');
   }
 
-  if (post.creatorId !== req.user.userId) {
+  if (post.creatorId !== req.user.id) {
     throw new ApiError(status.FORBIDDEN, 'Not authorized to delete this post');
   }
 
@@ -67,7 +67,7 @@ const deletePost = catchAsync(async (req, res) => {
 });
 
 const likePost = catchAsync(async (req, res) => {
-  const like = await postService.likePost(req.user.userId, req.params.postId);
+  const like = await postService.likePost(req.user.id, req.params.postId);
 
   res.status(status.OK).send({
     status: status.OK,
@@ -77,7 +77,7 @@ const likePost = catchAsync(async (req, res) => {
 });
 
 const unlikePost = catchAsync(async (req, res) => {
-  const unlike = await postService.unlikePost(req.user.userId, req.params.postId);
+  const unlike = await postService.unlikePost(req.user.id, req.params.postId);
 
   res.status(status.OK).send({
     status: status.OK,
@@ -87,7 +87,7 @@ const unlikePost = catchAsync(async (req, res) => {
 });
 
 const savePost = catchAsync(async (req, res) => {
-  const save = await postService.savePost(req.user.userId, req.params.postId);
+  const save = await postService.savePost(req.user.id, req.params.postId);
 
   res.status(status.OK).send({
     status: status.OK,
@@ -97,7 +97,7 @@ const savePost = catchAsync(async (req, res) => {
 });
 
 const unsavePost = catchAsync(async (req, res) => {
-  const unsave = await postService.unsavePost(req.user.userId, req.params.postId);
+  const unsave = await postService.unsavePost(req.user.id, req.params.postId);
 
   res.status(status.OK).send({
     status: status.OK,

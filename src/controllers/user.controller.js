@@ -29,7 +29,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.user.userId, req.body);
+  const user = await userService.updateUserById(req.user.id, req.body);
   
   res.status(status.OK).send({
     status: status.OK,
@@ -39,7 +39,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  await userService.deleteUserById(req.user.userId);
+  await userService.deleteUserById(req.user.id);
   
   res.status(status.OK).send({
     status: status.OK,
