@@ -96,6 +96,21 @@ const savePost = catchAsync(async (req, res) => {
   });
 });
 
+const getSavedPosts = catchAsync(async (req, res) => {
+  const { page, limit } = req.query;
+  const posts = await postService.getSavedPosts({ 
+    userId: req.user.id,
+    page, 
+    limit 
+  });
+
+  res.status(status.OK).send({
+    status: status.OK,
+    message: "Get Saved Posts Success",
+    data: posts
+  });
+});
+
 const unsavePost = catchAsync(async (req, res) => {
   const unsave = await postService.unsavePost(req.user.id, req.params.postId);
 
@@ -114,5 +129,6 @@ module.exports = {
   likePost,
   unlikePost,
   savePost,
-  unsavePost
+  unsavePost,
+  getSavedPosts
 };
