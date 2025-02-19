@@ -22,6 +22,7 @@ router
 
 router
   .route('/:postId/save')
+  .get(auth(), validate(postValidation.getSavedPost), postController.getSavedPost)
   .post(auth(), validate(postValidation.savePost), postController.savePost)
   .delete(auth(), validate(postValidation.unsavePost), postController.unsavePost);
 

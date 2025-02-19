@@ -96,9 +96,9 @@ const savePost = catchAsync(async (req, res) => {
   });
 });
 
-const getSavedPosts = catchAsync(async (req, res) => {
+const getSavedPost = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const posts = await postService.getSavedPosts({ 
+  const posts = await postService.getSavedPost({ 
     userId: req.user.id,
     page, 
     limit 
@@ -130,5 +130,5 @@ module.exports = {
   unlikePost,
   savePost,
   unsavePost,
-  getSavedPosts
+  getSavedPost
 };

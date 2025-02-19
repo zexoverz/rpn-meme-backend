@@ -58,6 +58,13 @@ const unsavePost = {
   }),
 };
 
+const getSavedPost = {
+    query: Joi.object().keys({
+      page: Joi.number().integer(),
+      limit: Joi.number().integer(),
+    }),
+};
+
 module.exports = {
   getPosts,
   createPost,
@@ -66,5 +73,6 @@ module.exports = {
   likePost,
   unlikePost,
   savePost,
-  unsavePost
+  unsavePost,
+  getSavedPost
 };

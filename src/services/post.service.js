@@ -52,7 +52,7 @@ const prisma = require("../../prisma");
   };
 
 
-  const getSavedPosts = async ({ userId, page, limit = 9 }) => {
+  const getSavedPost = async ({ userId, page, limit = 9 }) => {
     try {
       const cursor = page && typeof page === 'string' ? { id: page } : undefined;
   
@@ -184,5 +184,5 @@ module.exports = {
     savePost,
     unsavePost,
     updatePost,
-    getSavedPosts
+    getSavedPost
 }
