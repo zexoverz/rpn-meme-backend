@@ -29,4 +29,11 @@ router
   .post(auth(), validate(postValidation.savePost), postController.savePost)
   .delete(auth(), validate(postValidation.unsavePost), postController.unsavePost);
 
+router
+  .route('/search')
+  .get(
+    validate(postValidation.searchPost),
+    postController.searchPost
+  );
+
 module.exports = router;

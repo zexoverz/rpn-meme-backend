@@ -65,6 +65,14 @@ const getSavedPost = {
     }),
 };
 
+const searchPost = {
+    query: Joi.object().keys({
+      q: Joi.string().required().min(1),
+      page: Joi.number().integer(),
+      limit: Joi.number().integer(),
+    }),
+};
+
 module.exports = {
   getPosts,
   createPost,
@@ -74,5 +82,6 @@ module.exports = {
   unlikePost,
   savePost,
   unsavePost,
-  getSavedPost
+  getSavedPost,
+  searchPost
 };

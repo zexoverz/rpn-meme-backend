@@ -175,6 +175,60 @@ const prisma = require("../../prisma");
     }
   };
 
+  const searchPost = async ({ searchQuery, page, limit = 9 }) => {
+    try {
+      const cursor = page && typeof page === 'string' ? { id: page } : undefined;
+  
+      const posts = await prisma.post.findMany({
+        where: {
+          OR: [
+            {
+              caption: {
+                contains: searchQuery,
+                mode: 'insensitive'  // Case-insensitive search
+              }
+            },
+            {
+              location: {
+                contains: searchQuery,
+                mode: 'insensitive'
+              }
+            },
+            {
+              tags: {
+                has: searchQuery  // Search in array of tags
+              }
+            },
+            {
+              creator: {
+                name: {
+                  contains: searchQuery,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          ]
+        },
+        take: limit,
+        skip: cursor ? 1 : 0,
+        cursor: cursor,
+        orderBy: {
+          createdAt: 'desc'
+        },
+        include: {
+          creator: true,
+          likes: true,
+          saves: true
+        }
+      });
+  
+      return posts;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
 
 module.exports = {
     createPost,
@@ -184,5 +238,6 @@ module.exports = {
     savePost,
     unsavePost,
     updatePost,
-    getSavedPost
+    getSavedPost,
+    searchPost
 }

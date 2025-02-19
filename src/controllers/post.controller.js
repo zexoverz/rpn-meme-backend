@@ -106,7 +106,7 @@ const getSavedPost = catchAsync(async (req, res) => {
 
   res.status(status.OK).send({
     status: status.OK,
-    message: "Get Saved Posts Success",
+    message: "Get Saved Post Success",
     data: posts
   });
 });
@@ -121,6 +121,26 @@ const unsavePost = catchAsync(async (req, res) => {
   });
 });
 
+const searchPost = catchAsync(async (req, res) => {
+  const { q: searchQuery, page, limit } = req.query;
+
+  if (!searchQuery) {
+    throw new ApiError(status.BAD_REQUEST, 'Search query is required');
+  }
+
+  const posts = await postService.searchPost({ 
+    searchQuery, 
+    page, 
+    limit 
+  });
+
+  res.status(status.OK).send({
+    status: status.OK,
+    message: "Search Post Success",
+    data: posts
+  });
+});
+
 module.exports = {
   createPost,
   getPosts,
@@ -130,5 +150,6 @@ module.exports = {
   unlikePost,
   savePost,
   unsavePost,
-  getSavedPost
+  getSavedPost,
+  searchPost
 };
