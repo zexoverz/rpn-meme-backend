@@ -48,6 +48,11 @@ if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
 
+// Base URL Res
+app.use('/', (req, res, next) => {
+  res.send("Welcome to rpn-meme backend 🚀")
+});
+
 // v1 api routes
 app.use('/v1', routes);
 
