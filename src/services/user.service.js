@@ -20,9 +20,42 @@ const createUser = async (userBody) => {
  * Query for users
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async () => {
-  const users = await prisma.user.findMany();
-  return users;
+const queryUsers = async ({ page, limit = 9 }) => {
+  const cursor = page && typeof page === 'string' ? { id: page } : undefined;
+
+  const users = await prisma.user.findMany({
+    take: limit,
+    skip: cursor ? 1 : 0,
+    cursor: cursor,
+    orderBy: {
+      createdAt: 'desc'
+    },
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      imageId: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      updateAt: true,
+      isEmailVerified: true,
+      _count: {
+        select: {
+          posts: true
+        }
+      }
+    }
+  });
+
+  // Transform the response to flatten _count
+  const transformedUsers = users.map(user => ({
+    ...user,
+    totalPosts: user._count.posts,
+    _count: undefined
+  }));
+
+  return transformedUsers;
 };
 
 /**
