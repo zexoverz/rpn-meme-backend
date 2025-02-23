@@ -73,6 +73,7 @@ const searchPost = {
     }),
 };
 
+
 module.exports = {
   getPosts,
   createPost,
@@ -83,5 +84,5 @@ module.exports = {
   savePost,
   unsavePost,
   getSavedPost,
-  searchPost
+  searchPost,
 };

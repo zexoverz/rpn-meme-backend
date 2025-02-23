@@ -230,6 +230,45 @@ const prisma = require("../../prisma");
   };
 
 
+  const getTopLikedPost = async () => {
+    try {
+      const posts = await prisma.post.findMany({
+        take: 10,
+        orderBy: {
+          likes: {
+            _count: 'desc'
+          }
+        },
+        include: {
+          creator: true,
+          likes: true,
+          saves: true,
+          _count: {
+            select: {
+              likes: true,
+              saves: true
+            }
+          }
+        }
+      });
+  
+      // Transform the response to include like counts directly
+      const transformedPosts = posts.map(post => ({
+        ...post,
+        totalLikes: post._count.likes,
+        totalSaves: post._count.saves,
+        _count: undefined
+      }));
+  
+      return transformedPosts;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+  
+
+
 module.exports = {
     createPost,
     getInfinitePosts,
@@ -239,5 +278,6 @@ module.exports = {
     unsavePost,
     updatePost,
     getSavedPost,
-    searchPost
+    searchPost,
+    getTopLikedPost
 }

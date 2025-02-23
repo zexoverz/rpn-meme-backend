@@ -3,8 +3,6 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
 
-
-
 const getUsers = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
   const result = await userService.queryUsers({page, limit});

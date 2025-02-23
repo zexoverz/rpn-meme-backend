@@ -36,4 +36,10 @@ router
     postController.searchPost
   );
 
+router
+  .route('/leaderboard')
+  .get(
+    postController.getTopLikedPosts
+  );
+
 module.exports = router;

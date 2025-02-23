@@ -141,6 +141,16 @@ const searchPost = catchAsync(async (req, res) => {
   });
 });
 
+const getTopLikedPost = catchAsync(async (req, res) => {
+  const posts = await postService.getTopLikedPost();
+
+  res.status(status.OK).send({
+    status: status.OK,
+    message: "Get Top Liked Posts Success",
+    data: posts
+  });
+});
+
 module.exports = {
   createPost,
   getPosts,
@@ -151,5 +161,6 @@ module.exports = {
   savePost,
   unsavePost,
   getSavedPost,
-  searchPost
+  searchPost,
+  getTopLikedPost
 };
