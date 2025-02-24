@@ -39,7 +39,7 @@ router
 router
   .route('/leaderboard')
   .get(
-    postController.getTopLikedPosts
+    postController.getTopLikedPost
   );
 
 module.exports = router;
