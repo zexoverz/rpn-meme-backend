@@ -66,11 +66,11 @@ const getSavedPost = {
 };
 
 const searchPost = {
-    query: Joi.object().keys({
-      q: Joi.string().required().min(1),
-      page: Joi.number().integer(),
-      limit: Joi.number().integer(),
-    }),
+  query: Joi.object().keys({
+    q: Joi.string().required().min(1),
+    cursor: Joi.string().allow('', null), // Allow empty string or null
+    limit: Joi.number().integer(),
+  }),
 };
 
 

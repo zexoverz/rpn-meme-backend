@@ -126,22 +126,23 @@ const unsavePost = catchAsync(async (req, res) => {
 });
 
 const searchPost = catchAsync(async (req, res) => {
-  const { q: searchQuery, page, limit } = req.query;
+  const { q: searchQuery, cursor, limit } = req.query;
 
   if (!searchQuery) {
     throw new ApiError(status.BAD_REQUEST, 'Search query is required');
   }
 
-  const posts = await postService.searchPost({ 
+  const result = await postService.searchPost({ 
     searchQuery, 
-    page, 
+    page: cursor, // Use cursor instead of page for clarity 
     limit 
   });
 
   res.status(status.OK).send({
     status: status.OK,
     message: "Search Post Success",
-    data: posts
+    data: result.posts,
+    pagination: result.pagination
   });
 });
 
