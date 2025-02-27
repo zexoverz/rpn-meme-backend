@@ -101,17 +101,18 @@ const savePost = catchAsync(async (req, res) => {
 });
 
 const getSavedPost = catchAsync(async (req, res) => {
-  const { page, limit } = req.query;
-  const posts = await postService.getSavedPost({ 
+  const { cursor, limit } = req.query;
+  const result = await postService.getSavedPost({ 
     userId: req.user.id,
-    page, 
+    page: cursor, // Use cursor instead of page for clarity
     limit 
   });
 
   res.status(status.OK).send({
     status: status.OK,
     message: "Get Saved Post Success",
-    data: posts
+    data: result.posts,
+    pagination: result.pagination
   });
 });
 

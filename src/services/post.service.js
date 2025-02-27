@@ -80,14 +80,16 @@ const prisma = require("../../prisma");
 
   const getSavedPost = async ({ userId, page, limit = 9 }) => {
     try {
-      const cursor = page && typeof page === 'string' ? { id: page } : undefined;
-  
+      const cursor = page && page !== '' ? { id: page } : undefined;
+      
+      const fetchLimit = parseInt(limit) + 1;
+    
       const savedPosts = await prisma.save.findMany({
         where: {
           userId: userId
         },
-        take: limit,
-        skip: cursor ? 1 : 0,
+        take: fetchLimit,
+        skip: cursor ? 1 : 0, // Skip the cursor item if we have one
         cursor: cursor,
         orderBy: {
           createdAt: 'desc'
@@ -97,16 +99,45 @@ const prisma = require("../../prisma");
             include: {
               creator: true,
               likes: true,
-              saves: true
+              saves: true,
+              _count: {
+                select: {
+                  likes: true,
+                  saves: true
+                }
+              }
             }
           }
         }
       });
-  
-      // Transform the data to match the posts structure
-      const posts = savedPosts.map(save => save.post);
-  
-      return posts;
+      
+      // Check if we have more results
+      const hasNextPage = savedPosts.length > limit;
+      
+      // Remove the extra item we fetched to check for more pages
+      const paginatedSavedPosts = hasNextPage ? savedPosts.slice(0, limit) : savedPosts;
+      
+      // Get the ID of the last save to use as the next cursor
+      const nextCursor = hasNextPage && paginatedSavedPosts.length > 0 
+        ? paginatedSavedPosts[paginatedSavedPosts.length - 1].id 
+        : null;
+      
+      // Transform the data to include posts with counts
+      const posts = paginatedSavedPosts.map(save => ({
+        ...save.post,
+        totalLikes: save.post._count.likes,
+        totalSaves: save.post._count.saves,
+        _count: undefined
+      }));
+      
+      // Return both the posts and pagination information
+      return {
+        posts: posts,
+        pagination: {
+          nextCursor,
+          hasNextPage
+        }
+      };
     } catch (error) {
       console.log(error);
       throw error;

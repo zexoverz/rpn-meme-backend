@@ -59,10 +59,10 @@ const unsavePost = {
 };
 
 const getSavedPost = {
-    query: Joi.object().keys({
-      page: Joi.number().integer(),
-      limit: Joi.number().integer(),
-    }),
+  query: Joi.object().keys({
+    cursor: Joi.string().allow('', null), // Allow empty string or null
+    limit: Joi.number().integer(),
+  }),
 };
 
 const searchPost = {
