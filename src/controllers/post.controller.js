@@ -17,13 +17,17 @@ const createPost = catchAsync(async (req, res) => {
 });
 
 const getPosts = catchAsync(async (req, res) => {
-  const { page, limit } = req.query;
-  const posts = await postService.getInfinitePosts({ page, limit });
+  const { cursor, limit } = req.query;
+  const result = await postService.getInfinitePosts({ 
+    page: cursor, 
+    limit 
+  });
 
   res.status(status.OK).send({
     status: status.OK,
     message: "Get Posts Success",
-    data: posts
+    data: result.posts,
+    pagination: result.pagination
   });
 });
 

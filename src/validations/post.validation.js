@@ -12,7 +12,7 @@ const createPost = {
 
 const getPosts = {
   query: Joi.object().keys({
-    page: Joi.number().integer(),
+    cursor: Joi.string().allow('', null), // Allow empty string or null
     limit: Joi.number().integer(),
   }),
 };

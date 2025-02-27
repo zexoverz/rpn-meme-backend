@@ -25,14 +25,15 @@ const prisma = require("../../prisma");
     }
   };
   
- const getInfinitePosts = async ({ page, limit = 9 }) => {
+  const getInfinitePosts = async ({ page, limit = 9 }) => {
     try {
-
-      const cursor = page && typeof page === 'string' ? { id: page } : undefined;
-
+      const cursor = page && page !== '' ? { id: page } : undefined;
+      
+      const fetchLimit = parseInt(limit) + 1;
+      
       const posts = await prisma.post.findMany({
-        take: limit,
-        skip: cursor ? 1 : 0,
+        take: fetchLimit,
+        skip: cursor ? 1 : 0, // Skip the cursor item if we have one
         cursor: cursor,
         orderBy: {
           createdAt: 'desc'
@@ -40,11 +41,36 @@ const prisma = require("../../prisma");
         include: {
           creator: true,
           likes: true,
-          saves: true
+          saves: true,
+          _count: {
+            select: {
+              likes: true,
+              saves: true
+            }
+          }
         }
       });
-  
-      return posts;
+      
+      const hasNextPage = posts.length > limit;
+      
+      const paginatedPosts = hasNextPage ? posts.slice(0, limit) : posts;
+      
+      const nextCursor = hasNextPage ? paginatedPosts[paginatedPosts.length - 1].id : null;
+      
+      const transformedPosts = paginatedPosts.map(post => ({
+        ...post,
+        totalLikes: post._count.likes,
+        totalSaves: post._count.saves,
+        _count: undefined
+      }));
+      
+      return {
+        posts: transformedPosts,
+        pagination: {
+          nextCursor,
+          hasNextPage
+        }
+      };
     } catch (error) {
       console.log(error);
       throw error;
